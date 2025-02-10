@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">CatsListenMusic</string>
+    <string name="item_online_name">Online</string>
+    <string name="item_local_name">Local</string>
 </resources>
