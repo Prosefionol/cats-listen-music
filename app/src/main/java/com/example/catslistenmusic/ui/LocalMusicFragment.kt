@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import com.example.catslistenmusic.databinding.FragmentLocalMusicBinding
 
 class LocalMusicFragment : Fragment() {
@@ -17,6 +18,11 @@ class LocalMusicFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentLocalMusicBinding.inflate(layoutInflater, container, false)
+
+        binding.localPartBase.rvGroup.isVisible = false
+        binding.localPartBase.refreshGroup.isVisible = false
+        binding.localPartBase.progressBar.isVisible = false
+
         return binding.root
     }
 

@@ -2,4 +2,14 @@
     <string name="app_name">CatsListenMusic</string>
     <string name="item_online_name">Online</string>
     <string name="item_local_name">Local</string>
+    <string name="search_hint">Enter your query</string>
+    <string name="search_button_description">Search</string>
+    <string name="local_fragment_stub">You haven\'t downloaded any songs yet</string>
+    <string name="refresh_tv">Data upload error</string>
+    <string name="refresh_button">Try again</string>
+    <string name="unknown_song">Unknown song</string>
+    <string name="unknown_artist">Unknown artist</string>
+    <string name="unknown_album">Unknown album</string>
+    <string name="placeholder">Placeholder</string>
+    <string name="song_cover">Song cover</string>
 </resources>
