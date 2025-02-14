@@ -7,7 +7,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.catslistenmusic.databinding.FragmentOnlineMusicBinding
+import com.example.catslistenmusic.ui.adapters.TrackAdapter
 import com.example.catslistenmusic.viewmodel.OnlineMusicViewModel
 
 class OnlineMusicFragment : Fragment() {
@@ -18,6 +20,8 @@ class OnlineMusicFragment : Fragment() {
 
     private val viewModel: OnlineMusicViewModel by viewModels()
 
+    private lateinit var adapter: TrackAdapter
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -25,15 +29,23 @@ class OnlineMusicFragment : Fragment() {
         _binding = FragmentOnlineMusicBinding.inflate(layoutInflater, container, false)
 
         binding.onlinePartBase.rvGroup.isVisible = false
-        binding.onlinePartBase.progressBar.isVisible = false
+        binding.onlinePartBase.refreshGroup.isVisible = false
+
+        adapter = TrackAdapter(requireContext())
+        binding.onlinePartBase.recyclerView.adapter = adapter
+        binding.onlinePartBase.recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         viewModel.chartData.observe(viewLifecycleOwner) {
-            binding.onlinePartBase.refreshTv.text = it
+            adapter.submitList(it)
+            binding.onlinePartBase.rvGroup.isVisible = true
+            binding.onlinePartBase.progressBar.isVisible = false
         }
 
         binding.onlinePartBase.refreshButton.setOnClickListener {
             viewModel.fetchChartData()
         }
+
+        viewModel.fetchChartData()
 
         return binding.root
     }
