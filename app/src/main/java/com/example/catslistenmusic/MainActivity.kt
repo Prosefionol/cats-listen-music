@@ -1,17 +1,16 @@
 package com.example.catslistenmusic
 
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
-import androidx.viewbinding.ViewBinding
 import com.example.catslistenmusic.databinding.ActivityMainBinding
+import com.example.catslistenmusic.model.Track
+import com.example.catslistenmusic.model.toGigaTrack
 import com.example.catslistenmusic.ui.LocalMusicFragment
+import com.example.catslistenmusic.ui.MusicPlayerFragment
 import com.example.catslistenmusic.ui.OnlineMusicFragment
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), Navigator {
 
     private lateinit var binding: ActivityMainBinding
 
@@ -40,8 +39,17 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun loadFragment(fragment: Fragment) {
-        val transaction = supportFragmentManager.beginTransaction()
-        transaction.replace(R.id.fragment_container, fragment)
-        transaction.commit()
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, fragment)
+            .commit()
+    }
+
+    override fun listenTrack(track: Track) {
+        val gigaTrack = track.toGigaTrack()
+        val fragment = MusicPlayerFragment.newInstance(gigaTrack)
+        supportFragmentManager.beginTransaction()
+            .addToBackStack(null)
+            .replace(R.id.fragment_container, fragment)
+            .commit()
     }
 }
