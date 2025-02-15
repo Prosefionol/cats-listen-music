@@ -14,6 +14,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 
 class OnlineMusicViewModel: ViewModel() {
 
@@ -26,6 +28,20 @@ class OnlineMusicViewModel: ViewModel() {
             try {
                 val chartResponse = RetrofitClient.apiService.getChart()
                 _chartData.postValue(SuccessAnswerApi(chartResponse.tracks.data))
+            }
+            catch (e: Exception) {
+                _chartData.postValue(ErrorAnswerApi(e))
+            }
+        }
+    }
+
+    fun fetchSearchData(query: String) {
+        val encodedQuery = URLEncoder.encode(query, StandardCharsets.UTF_8.toString())
+        _chartData.postValue(PendingAnswerApi())
+        viewModelScope.launch {
+            try {
+                val searchResponse = RetrofitClient.apiService.search(encodedQuery)
+                _chartData.postValue(SuccessAnswerApi(searchResponse.data))
             }
             catch (e: Exception) {
                 _chartData.postValue(ErrorAnswerApi(e))

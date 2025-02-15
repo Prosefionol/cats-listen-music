@@ -6,8 +6,10 @@ import androidx.fragment.app.viewModels
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.catslistenmusic.R
 import com.example.catslistenmusic.databinding.FragmentOnlineMusicBinding
 import com.example.catslistenmusic.model.api.ErrorAnswerApi
 import com.example.catslistenmusic.model.api.PendingAnswerApi
@@ -59,6 +61,16 @@ class OnlineMusicFragment : Fragment() {
 
         binding.onlinePartBase.refreshButton.setOnClickListener {
             viewModel.fetchChartData()
+        }
+
+        binding.onlinePartBase.searchButton.setOnClickListener {
+            val query = binding.onlinePartBase.searchInput.text.toString()
+            if (query.isNotEmpty()) {
+                viewModel.fetchSearchData(query)
+            }
+            else {
+                Toast.makeText(requireContext(), getString(R.string.search_hint), Toast.LENGTH_SHORT).show()
+            }
         }
 
         viewModel.fetchChartData()
