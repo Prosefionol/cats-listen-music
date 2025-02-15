@@ -9,6 +9,10 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.catslistenmusic.databinding.FragmentOnlineMusicBinding
+import com.example.catslistenmusic.model.api.ErrorAnswerApi
+import com.example.catslistenmusic.model.api.PendingAnswerApi
+import com.example.catslistenmusic.model.api.SuccessAnswerApi
+import com.example.catslistenmusic.model.api.getAnswer
 import com.example.catslistenmusic.ui.adapters.TrackAdapter
 import com.example.catslistenmusic.viewmodel.OnlineMusicViewModel
 
@@ -28,17 +32,29 @@ class OnlineMusicFragment : Fragment() {
     ): View {
         _binding = FragmentOnlineMusicBinding.inflate(layoutInflater, container, false)
 
-        binding.onlinePartBase.rvGroup.isVisible = false
-        binding.onlinePartBase.refreshGroup.isVisible = false
-
         adapter = TrackAdapter(requireContext())
         binding.onlinePartBase.recyclerView.adapter = adapter
         binding.onlinePartBase.recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         viewModel.chartData.observe(viewLifecycleOwner) {
-            adapter.submitList(it)
-            binding.onlinePartBase.rvGroup.isVisible = true
-            binding.onlinePartBase.progressBar.isVisible = false
+            when (it) {
+                is PendingAnswerApi -> {
+                    binding.onlinePartBase.rvGroup.isVisible = false
+                    binding.onlinePartBase.progressBar.isVisible = true
+                    binding.onlinePartBase.refreshGroup.isVisible = false
+                }
+                is ErrorAnswerApi -> {
+                    binding.onlinePartBase.rvGroup.isVisible = false
+                    binding.onlinePartBase.progressBar.isVisible = false
+                    binding.onlinePartBase.refreshGroup.isVisible = true
+                }
+                is SuccessAnswerApi -> {
+                    adapter.submitList(it.getAnswer()!!)
+                    binding.onlinePartBase.rvGroup.isVisible = true
+                    binding.onlinePartBase.progressBar.isVisible = false
+                    binding.onlinePartBase.refreshGroup.isVisible = false
+                }
+            }
         }
 
         binding.onlinePartBase.refreshButton.setOnClickListener {
