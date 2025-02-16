@@ -10,6 +10,5 @@
     <string name="unknown_song">Unknown song</string>
     <string name="unknown_artist">Unknown artist</string>
     <string name="unknown_album">Unknown album</string>
-    <string name="placeholder">Placeholder</string>
-    <string name="song_cover">Song cover</string>
+    <string name="song_cover">Album cover</string>
 </resources>
