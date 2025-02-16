@@ -17,6 +17,7 @@ import com.example.catslistenmusic.model.api.SuccessAnswerApi
 import com.example.catslistenmusic.model.api.getAnswer
 import com.example.catslistenmusic.ui.adapters.TrackAdapter
 import com.example.catslistenmusic.viewmodel.OnlineMusicViewModel
+import com.example.catslistenmusic.viewmodel.utils.ViewModelFactory
 
 class OnlineMusicFragment : Fragment() {
 
@@ -24,7 +25,9 @@ class OnlineMusicFragment : Fragment() {
     private val binding
         get() = _binding!!
 
-    private val viewModel: OnlineMusicViewModel by viewModels()
+    private val viewModel: OnlineMusicViewModel by viewModels<OnlineMusicViewModel> {
+        ViewModelFactory(this)
+    }
 
     private lateinit var adapter: TrackAdapter
 
@@ -38,7 +41,7 @@ class OnlineMusicFragment : Fragment() {
         binding.onlinePartBase.recyclerView.adapter = adapter
         binding.onlinePartBase.recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        viewModel.chartData.observe(viewLifecycleOwner) {
+        viewModel.trackData.observe(viewLifecycleOwner) {
             when (it) {
                 is PendingAnswerApi -> {
                     binding.onlinePartBase.rvGroup.isVisible = false
@@ -73,9 +76,15 @@ class OnlineMusicFragment : Fragment() {
             }
         }
 
-        viewModel.fetchChartData()
-
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        if (viewModel.trackData.value == null) {
+            viewModel.fetchChartData()
+        }
     }
 
     override fun onDestroyView() {

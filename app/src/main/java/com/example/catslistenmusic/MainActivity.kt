@@ -19,7 +19,6 @@ class MainActivity : AppCompatActivity(), Navigator {
         binding = ActivityMainBinding.inflate(layoutInflater).also {
             setContentView(it.root)
         }
-
         binding.bottomNavBar.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.item_online -> {
@@ -38,18 +37,27 @@ class MainActivity : AppCompatActivity(), Navigator {
         }
     }
 
-    private fun loadFragment(fragment: Fragment) {
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, fragment)
-            .commit()
+    override fun loadFragment(fragment: Fragment) {
+        val fragmentTag = fragment.javaClass.simpleName
+        val existingFragment = supportFragmentManager.findFragmentByTag(fragmentTag)
+
+        if (existingFragment != null) {
+            supportFragmentManager.popBackStack(fragmentTag, 0)
+        } else {
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, fragment, fragmentTag)
+                .addToBackStack(fragmentTag)
+                .commit()
+        }
     }
 
     override fun listenTrack(track: Track) {
         val gigaTrack = track.toGigaTrack()
         val fragment = MusicPlayerFragment.newInstance(gigaTrack)
+        val fragmentTag = fragment.javaClass.simpleName
         supportFragmentManager.beginTransaction()
-            .addToBackStack(null)
-            .replace(R.id.fragment_container, fragment)
+            .replace(R.id.fragment_container, fragment, fragmentTag)
+            .addToBackStack(fragmentTag)
             .commit()
     }
 }
